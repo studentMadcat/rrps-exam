@@ -1,0 +1,232 @@
+version: '3.8'
+
+
+networks:
+  ecommerce-network: 
+    driver: bridge 
+
+# Розділ для визначення томів, які будуть використовуватися для збереження даних
+volumes:
+  mongo_data: # Іменований том для даних MongoDB
+    driver: local # Стандартний драйвер для локальних томів
+  postgres_data: # Іменований том для даних PostgreSQL
+    driver: local
+  redis_data: # Іменований том для даних Redis
+    driver: local
+
+services:
+  # Сервіс каталогу товарів
+  product-catalog-service:
+    build:
+      context: ./product-catalog-service # Шлях до директорії, де знаходиться Dockerfile для цього сервісу
+      dockerfile: Dockerfile # Назва Dockerfile (можна опустити, якщо назва стандартна)
+    container_name: product_catalog_service_app # Зручне ім'я для контейнера
+    ports:
+      - "8001:8000" # Мапінг порту 8001 хоста на порт 8000 контейнера
+    environment: # Змінні середовища, що передаються в контейнер
+      - MONGODB_URL=mongodb://mongodb:27017/product_db # URL для підключення до MongoDB
+      - MONGODB_DATABASE=product_db
+      - MONGODB_USERNAME= 
+      - MONGODB_PASSWORD=
+      - APP_PORT=8000
+      - DEBUG_MODE=True # Режим відладки для FastAPI
+    volumes:
+      - ./product-catalog-service:/app # Монтування коду для "гарячого" перезавантаження в режимі розробки
+    depends_on: 
+      mongodb: 
+        condition: service_healthy # Чекати, поки mongodb стане "здоровим"
+    networks: # Призначення сервісу до визначеної мережі
+      - ecommerce-network
+    restart: unless-stopped # Політика перезапуску контейнера
+    healthcheck: # Перевірка стану сервісу
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"] #(потрібно реалізувати /health ендпоінт)
+      interval: 30s # Інтервал між перевірками
+      timeout: 10s # Час очікування відповіді
+      retries: 3 # Кількість спроб
+      start_period: 60s # Період, протягом якого невдалі перевірки не враховуються (час на запуск сервісу)
+
+  # Сервіс кошика
+  cart-service:
+    build: ./cart-service
+    container_name: cart_service_app
+    ports:
+      - "8002:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - APP_PORT=8000
+      - DEBUG_MODE=True
+      - PRODUCT_CATALOG_SERVICE_URL=http://product-catalog-service:8000 # URL для звернення до сервісу каталогу
+    volumes:
+      - ./cart-service:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+      product-catalog-service: # Може залежати від каталогу для перевірки товарів
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Сервіс замовлень
+  order-service:
+    build: ./order-service
+    container_name: order_service_app
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://order_user:order_password@postgresql:5432/order_db # URL для PostgreSQL
+      - POSTGRES_HOST=postgresql
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=order_user
+      - POSTGRES_PASSWORD=order_password
+      - POSTGRES_DB=order_db
+      - CART_SERVICE_URL=http://cart-service:8000 # URL для звернення до сервісу кошика
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8000 # URL для сервісу нотифікацій
+      - APP_PORT=8000
+      - DEBUG_MODE=True
+    volumes:
+      - ./order-service:/app
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      cart-service:
+        condition: service_healthy
+      notification-service:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Сервіс нотифікацій
+  notification-service:
+    build: ./notification-service
+    container_name: notification_service_app
+    ports:
+      - "8004:8000"
+    environment:
+      - APP_PORT=8000
+      - DEBUG_MODE=True
+      # Можуть бути змінні для підключення до RabbitMQ/Kafka або SMTP сервера
+      # - RABBITMQ_HOST=rabbitmq
+      # - SMTP_HOST=mail.example.com
+    volumes:
+      - ./notification-service:/app
+    # depends_on:
+    #   rabbitmq: # Якщо використовується RabbitMQ
+    #     condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # База даних MongoDB для сервісу каталогу
+  mongodb:
+    image: mongo:5.0 # Використання конкретної версії образу
+    container_name: mongodb_db
+    ports:
+      - "27017:27017" # Стандартний порт MongoDB
+    volumes:
+      - mongo_data:/data/db # Монтування іменованого тому для збереження даних
+      # Можна також монтувати скрипти ініціалізації:
+      # - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      # Змінні для створення користувача та бази даних при першому запуску (якщо потрібно)
+      # - MONGO_INITDB_ROOT_USERNAME=admin
+      # - MONGO_INITDB_ROOT_PASSWORD=secret
+      # - MONGO_INITDB_DATABASE=product_db
+      - TZ=Europe/Kyiv # Встановлення часової зони
+    networks:
+      - ecommerce-network
+    restart: always # Бази даних зазвичай повинні завжди перезапускатися
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet # Перевірка стану MongoDB
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # База даних Redis для сервісу кошика
+  redis:
+    image: redis:6.2-alpine # Використання легкої версії Alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379" # Стандартний порт Redis
+    volumes:
+      - redis_data:/data # Монтування іменованого тому
+    # command: redis-server --appendonly yes # Приклад команди для включення AOF persistence
+    networks:
+      - ecommerce-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"] # Перевірка стану Redis
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # База даних PostgreSQL для сервісу замовлень
+  postgresql:
+    image: postgres:14-alpine # Використання конкретної версії
+    container_name: postgresql_db
+    ports:
+      - "5432:5432" # Стандартний порт PostgreSQL
+    environment: # Змінні для налаштування PostgreSQL
+      - POSTGRES_USER=order_user
+      - POSTGRES_PASSWORD=order_password # Важливо: для реальних проектів використовуйте секрети або .env файли
+      - POSTGRES_DB=order_db
+      - PGDATA=/var/lib/postgresql/data/pgdata # Шлях до даних всередині контейнера
+      - TZ=Europe/Kyiv
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/pgdata # Монтування іменованого тому
+      # Можна монтувати скрипти ініціалізації:
+      # - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ecommerce-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h localhost"] # Перевірка стану PostgreSQL
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Nginx для локального тестування єдиної точки входу
+  # nginx-proxy:
+  #   image: nginx:latest
+  #   container_name: nginx_proxy_local
+  #   ports:
+  #     - "80:80" # Зовнішній порт 80
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro # Монтування конфігураційного файлу Nginx (тільки для читання)
+  #   depends_on: # Залежить від усіх бекенд-сервісів
+  #     - product-catalog-service
+  #     - cart-service
+  #     - order-service
+  #     - notification-service
+  #   networks:
+  #     - ecommerce-network
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "service", "nginx", "status"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
