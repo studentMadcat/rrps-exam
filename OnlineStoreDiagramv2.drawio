@@ -1,0 +1,156 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.9 Chrome/134.0.6998.205 Electron/35.4.0 Safari/537.36" version="27.0.9">
+  <diagram name="Сторінка-1" id="5j1Yj_BLczJOeBl_uHeI">
+    <mxGraphModel dx="1282" dy="698" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hFGmCG--aH60y3n9ryzT-1" value="Kubernetes Cluster" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="237" y="124" width="866" height="742" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-2" value="Сервіс Нотифікацій Поди" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="723" y="737" width="194" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-3" value="Сервіс Замовлень Поди" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="922" y="566" width="182" height="121" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-4" value="Сервіс Кошика Поди" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="564" y="566" width="159" height="121" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-5" value="Сервіс Каталогу Поди" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="277" y="566" width="258" height="121" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-6" value="Клієнт" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="545" y="20" width="107" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-7" value="API Gateway / K8s Ingress" style="rhombus;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="479" y="149" width="240" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-8" value="Catalog Svc" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="313" y="439" width="112" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-9" value="Cart Svc" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="567" y="439" width="89" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-10" value="Order Svc" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="886" y="439" width="99" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-11" value="Notification Svc" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="748" y="600" width="143" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-12" value="MongoDB" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="20" y="593" width="79" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-13" value="Redis" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="149" y="596" width="52" height="61" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-14" value="PostgreSQL" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1138" y="591" width="94" height="71" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-15" value="Pod 1" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="313" y="607" width="69" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-16" value="Pod 2" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="430" y="608" width="69" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-17" value="Pod 1" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="609" y="603" width="69" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-18" value="Pod 1" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="978.5" y="607" width="69" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-19" value="Pod 1" style="rounded=1;arcSize=20;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="785" y="770" width="69" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-20" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-6" target="hFGmCG--aH60y3n9ryzT-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-21" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.82;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-7" target="hFGmCG--aH60y3n9ryzT-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="369" y="414" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-22" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.54;exitY=1;entryX=0.49;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-7" target="hFGmCG--aH60y3n9ryzT-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="611" y="414" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-23" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.72;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-7" target="hFGmCG--aH60y3n9ryzT-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="936" y="414" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-24" value="Надіслати сповіщення" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-10" target="hFGmCG--aH60y3n9ryzT-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-25" value="" style="curved=1;startArrow=none;endArrow=none;exitX=0.07;exitY=1;entryX=1;entryY=0.32;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-8" target="hFGmCG--aH60y3n9ryzT-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="257" y="530" />
+              <mxPoint x="257" y="566" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-26" value="" style="curved=1;startArrow=none;endArrow=none;exitX=0.22;exitY=1;entryX=1.01;entryY=0.44;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-9" target="hFGmCG--aH60y3n9ryzT-13">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="554" y="530" />
+              <mxPoint x="550" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-27" value="" style="curved=1;startArrow=none;endArrow=none;exitX=0.45;exitY=1;entryX=0.5;entryY=0;rounded=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-10" target="hFGmCG--aH60y3n9ryzT-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="924" y="566" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-28" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.41;exitY=1;entryX=0.49;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-8" target="hFGmCG--aH60y3n9ryzT-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="346" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-29" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.86;exitY=1;entryX=0.51;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-8" target="hFGmCG--aH60y3n9ryzT-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="465" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-30" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.65;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-9" target="hFGmCG--aH60y3n9ryzT-17">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="644" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-31" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.84;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-10" target="hFGmCG--aH60y3n9ryzT-18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1013" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hFGmCG--aH60y3n9ryzT-32" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="hFGmCG--aH60y3n9ryzT-11" target="hFGmCG--aH60y3n9ryzT-19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

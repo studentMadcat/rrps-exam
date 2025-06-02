@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-ingress
+  annotations: # Анотації для налаштування поведінки Ingress Controller
+    nginx.ingress.kubernetes.io/rewrite-target: /$2 # Приклад для перезапису шляху
+    nginx.ingress.kubernetes.io/ssl-redirect: "true" # Примусовий редирект на HTTPS
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod" # Якщо використовується cert-manager для автоматичних SSL-сертифікатів
+spec:
+  # ingressClassName: nginx # Вказує, який Ingress Controller використовувати (якщо їх декілька)
+  tls: # Конфігурація TLS/SSL
+  - hosts:
+    - api.your-ecommerce.com # Доменне ім'я
+    secretName: ecommerce-tls-secret # Secret, що містить TLS сертифікат та ключ
+  rules: # Правила маршрутизації
+  - host: api.your-ecommerce.com # Трафік для цього хоста
+    http:
+      paths:
+      - path: /products(/|$)(.*) # Шлях для сервісу каталогу
+        pathType: Prefix # Тип відповідності шляху
+        backend:
+          service:
+            name: product-catalog-service # Назва Kubernetes Service
+            port:
+              number: 80 # Порт Service
+      - path: /carts(/|$)(.*) # Шлях для сервісу кошика
+        pathType: Prefix
+        backend:
+          service:
+            name: cart-service
+            port:
+              number: 80
+      - path: /orders(/|$)(.*) # Шлях для сервісу замовлень
+        pathType: Prefix
+        backend:
+          service:
+            name: order-service
+            port:
+              number: 80
+      - path: /notifications(/|$)(.*) # Шлях для сервісу замовлень
+        pathType: Prefix
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 80
+      - path: /logging(/|$)(.*) # Шлях для сервісу замовлень
+        pathType: Prefix
+        backend:
+          service:
+            name: logging-service
+            port:
+              number: 80
+      

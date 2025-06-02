@@ -1,0 +1,73 @@
+global:
+  scrape_interval: 15s # Як часто збирати метрики з усіх цілей
+  scrape_timeout: 10s  # Максимальний час очікування відповіді від цілі
+  evaluation_interval: 1m # Як часто обчислювати правила запису та сповіщень
+
+# Конфігурація для Alertmanager (якщо використовується)
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - 'alertmanager:9093' # Адреса вашого Alertmanager
+
+# Список файлів з правилами запису та/або сповіщень
+rule_files:
+# - "alert_rules.yml"
+# - "recording_rules.yml"
+
+scrape_configs:
+  # Завдання для збору метрик з самого Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090'] # Prometheus зазвичай слухає на порті 9090
+
+  # Завдання для Сервісу Каталогу Товарів
+  - job_name: 'product-catalog-service'
+    metrics_path: /metrics # Шлях до ендпоінту з метриками (стандартний для prometheus-fastapi-instrumentator)
+    scheme: http # Протокол
+    static_configs:
+      # Якщо Prometheus та сервіс в одній Docker Compose мережі:
+      # - targets: ['product-catalog-service:8000'] # Ім'я сервісу з Docker Compose та порт контейнера
+      # Якщо Prometheus в Kubernetes, а сервіс має Kubernetes Service:
+      - targets: ['product-catalog-service-k8s-svc.your-namespace.svc.cluster.local:80'] # Повне DNS ім'я Kubernetes Service
+        # Або коротше, якщо Prometheus в тому ж namespace: ['product-catalog-service-k8s-svc:80']
+      # Якщо Prometheus запущений локально, а сервіс мапить порт на хост:
+      # - targets: ['localhost:8001'] # Маплений порт хоста
+    # Приклад relabel_configs для додавання мітки середовища
+    relabel_configs:
+      - source_labels: [] # Немає джерела, просто додаємо мітку
+        target_label: environment
+        replacement: 'development' # Або 'production', 'staging'
+
+  # Завдання для Сервісу Кошика
+  - job_name: 'cart-service'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['cart-service-k8s-svc.your-namespace.svc.cluster.local:80'] # Або ['cart-service:8000'] для Docker Compose
+    # Приклад metric_relabel_configs для видалення непотрібної метрики
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'some_unwanted_metric_prefix_.*' # Регулярний вираз для назви метрики
+        action: drop # Видалити метрики, що відповідають regex
+
+  # Завдання для Сервісу Замовлень
+  - job_name: 'order-service'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['order-service-k8s-svc.your-namespace.svc.cluster.local:80'] # Або ['order-service:8000']
+
+  # Завдання для Сервісу Нотифікацій
+  - job_name: 'notification-service'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['notification-service-k8s-svc.your-namespace.svc.cluster.local:80'] # Або ['notification-service:8000']
+
+  # Завдання для Сервісу Логування
+  - job_name: 'logging-service'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['logging-service-k8s-svc.your-namespace.svc.cluster.local:80'] # Або ['logging-service:8000']

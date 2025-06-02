@@ -9,12 +9,12 @@ ENV PYTHONUNBUFFERED 1
 # Встановлюємо робочу директорію всередині контейнера.
 WORKDIR /app
 
-COPY requirements.txt .
+COPY ./requirements.txt /app/
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
 
-COPY . .
+COPY ./cart_service.py /app/
 
 RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 # USER appuser # Переключення на користувача без root-прав (можна розкоментувати, якщо потрібно)

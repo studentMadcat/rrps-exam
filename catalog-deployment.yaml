@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-catalog-service
+  labels:
+    app: product-catalog-service # Мітка для ідентифікації Deployment
+spec:
+  replicas: 2 # Запускаємо 2 екземпляри (Pod'и) цього сервісу для відмовостійкості та балансування
+  selector:
+    matchLabels:
+      app: product-catalog-service # Deployment керує Pod'ами з цією міткою
+  template: # Шаблон для створення Pod'ів
+    metadata:
+      labels:
+        app: product-catalog-service # Pod'и отримують цю мітку
+    spec:
+      containers:
+      - name: product-catalog-container # Назва контейнера всередині Pod'а
+        image: product-catalog-service:latest # Шлях до вашого Docker-образу
+        ports:
+        - containerPort: 8000 # Порт, на якому слухає додаток всередині контейнера
+        envFrom: # Завантаження змінних середовища з ConfigMap та Secret
+          - configMapRef:
+              name: product-catalog-config # Назва ConfigMap
+          - secretRef:
+              name: mongodb-credentials # Назва Secret для MongoDB
+        resources: # Запити та ліміти ресурсів (важливо для планування та стабільності)
+          requests:
+            memory: "128Mi" # Мінімально необхідна пам'ять
+            cpu: "250m"    # Мінімально необхідний CPU (0.25 ядра)
+          limits:
+            memory: "256Mi" # Максимально дозволена пам'ять
+            cpu: "500m"    # Максимально дозволений CPU
+        readinessProbe: # Перевірка готовності Pod'а приймати трафік
+          httpGet:
+            path: /health # Ендпоінт для перевірки стану (має бути реалізований у сервісі)
+            port: 8000
+          initialDelaySeconds: 15 # Початкова затримка перед першою перевіркою
+          periodSeconds: 10     # Періодичність перевірок
+        livenessProbe: # Перевірка "живучості" Pod'а (чи потрібно його перезапустити)
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 15

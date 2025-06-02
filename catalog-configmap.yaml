@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-catalog-config
+data:
+  MONGODB_DATABASE: "product_db_k8s" # Значення конфігурації
+  LOGGING_SERVICE_URL: "http://logging-service:80" # Використовуємо ім'я K8s Service
+  DEBUG_MODE: "False" # Зазвичай для production встановлюється в False

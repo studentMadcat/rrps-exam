@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product-catalog-hpa
+spec:
+  scaleTargetRef: # Вказує на Deployment, який потрібно масштабувати
+    apiVersion: apps/v1
+    kind: Deployment
+    name: product-catalog-service
+  minReplicas: 2 # Мінімальна кількість реплік
+  maxReplicas: 5 # Максимальна кількість реплік
+  metrics: # Метрики, на основі яких приймається рішення про масштабування
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization # Цільове значення - відсоток використання запитаних ресурсів
+        averageUtilization: 70 # Масштабувати, якщо середнє використання CPU перевищує 70%
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue # Цільове значення - абсолютне середнє значення
+        averageValue: 200Mi # Масштабувати, якщо середнє використання пам'яті перевищує 200Mi

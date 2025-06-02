@@ -113,13 +113,19 @@ async def store_log_entry_async(log_entry: LogEntryIn):
 @app.post("/logs", status_code=202, summary="Прийняти та зберегти запис логу")
 async def receive_log_entry_endpoint(log_entry: LogEntryIn = Body(...)):
     try:
+        # Встановлюємо timestamp, якщо він не був переданий
         if log_entry.timestamp is None:
             log_entry.timestamp = datetime.datetime.utcnow()
             
         await store_log_entry_async(log_entry)
         return {"status": "Лог успішно прийнято"}
     except Exception as e:
+        # Логуємо помилку самого сервісу логування
         service_logger.critical(f"Критична помилка при обробці вхідного запису логу: {e}", exc_info=True)
+        # Не кидаємо HTTPException, щоб не переривати сервіси, що логують,
+        # але це означає, що відправник не дізнається про проблему тут.
+        # Можна повернути 500, якщо це критично.
+        # raise HTTPException(status_code=500, detail=f"Внутрішня помилка сервісу логування: {str(e)}")
         return {"status": "Помилка обробки логу на сервері логування", "error_detail": str(e)}
 
 
